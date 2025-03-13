@@ -1,1 +1,1 @@
-- [link da fake API]([https://git-scm.com/docs/git/pt_BR](https://github.com/JeffersonAlmir/fake-api-instituicoes.git))
+- [link da fake API](https://github.com/JeffersonAlmir/fake-api-instituicoes.git)

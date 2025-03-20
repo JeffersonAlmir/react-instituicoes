@@ -1,67 +1,50 @@
 import { MDBInput, MDBTooltip } from "mdb-react-ui-kit";
-import { useState } from "react";
 import { Button, Col, Form, Modal, Row,  } from "react-bootstrap";
 import InstituicoesTable from "../components/InstituicoesTable";
-import * as Yup from "yup";
 import { Formik } from "formik";
 import {ToastContainer, toast } from "react-toastify";
+import useInstituicao from '../context/InstituicoesContext';
 
 const Instituicoes = () => {
-  const [instituicoes, setInstituicoes] = useState([]);
-  const [show, setShow] = useState(false);
-  const handleShow = () => setShow(!show);
 
-
-  const schema = Yup.object().shape({
-    NO_REGIAO: Yup.string().required("Campo obrigatório"),
-    NO_UF: Yup.string().required("Campo obrigatório"),
-    NO_MUNICIPIO: Yup.string().required("Campo obrigatório"),
-    NO_MESORREGIAO: Yup.string().required("Campo obrigatório"),
-    NO_MICRORREGIAO: Yup.string().required("Campo obrigatório"),
-    NO_ENTIDADE: Yup.string().required("Campo obrigatório"),
-    QT_MAT_BAS: Yup.number().min(0).integer(),
-    QT_MAT_INF: Yup.number().min(0).integer(),
-    QT_MAT_FUND: Yup.number().min(0).integer(),
-    QT_MAT_MED: Yup.number().min(0).integer(),
-    QT_MAT_MED_CT: Yup.number().min(0).integer(),
-  });
+  let {
+    instituicoes, 
+    setInstituicoes,
+    instituicoesInitialValues,
+    schema,
+    show,
+    handleShow,
+    setShow
+  } = useInstituicao();
 
  
-
-  const handleSubmit = async (values, { setSubmitting }) => {
-    try {
-      const response = await fetch("http://localhost:3000/instituicoes", {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
+  const handleSubmit = (values, actions) => {
+    //POST, PUT e DELETE
+    fetch('http://localhost:3000/instituicoes', {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values),
+    })
+      .then((response) => {
+        if (response.ok) {
+          
+          toast.success('Instituição cadastrada com sucesso!');
+          
+          setInstituicoes([...instituicoes, values]);
+          
+          setShow(!show);
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        toast.error('Problema no envio dos dados da instituição!');
       });
 
-      if (response.ok) {
-        setInstituicoes([...instituicoes,values ]);
-        
-        toast.success("Validando os dados...", {
-          autoClose: 1800,
-          hideProgressBar: false
-        })
-          
-        setTimeout(() => {
-          setShow(!show);
-          toast.success("Instituição cadastrada com sucesso!", {
-            autoClose: 2000,
-            hideProgressBar: true
-          });
-        }, 2200);
-        
-      }
-    } catch (error) {
-      console.log("Erro ao enviar dados!", error);
-      toast.error("Ocorreu um erro!")
-    }
-    setSubmitting(false);
+    actions.setSubmitting(false);
   };
 
   return (
@@ -81,10 +64,7 @@ const Instituicoes = () => {
         </Row>
       </div>
       
-      <InstituicoesTable 
-      instituicoes={instituicoes} 
-      setInstituicoes={setInstituicoes} 
-      />
+      <InstituicoesTable />
 
       <ToastContainer />
       
@@ -94,19 +74,8 @@ const Instituicoes = () => {
         </Modal.Header>
         <Formik
          initialValues={{
-          NO_REGIAO: "",
-          NO_UF: "",
-          NO_MUNICIPIO: "",
-          NO_MESORREGIAO: "",
-          NO_MICRORREGIAO: "",
-          NO_ENTIDADE: "",
-          QT_MAT_BAS: "",
-          QT_MAT_INF: "",
-          QT_MAT_FUND: "",
-          QT_MAT_MED: "",
-          QT_MAT_MED_CT: "",
-         }
-         } 
+           instituicoesInitialValues
+         }} 
          validationSchema={schema}
           onSubmit={handleSubmit}>
           {({ values, errors, handleChange, handleSubmit }) => (

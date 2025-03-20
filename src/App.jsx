@@ -6,6 +6,7 @@ import Sobre from './views/Sobre';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import Principal from './layouts/Principal';
 import Instituicoes from './views/Instituicoes';
+import { InstituicoesContextProvider } from './context/InstituicoesContext';
 
 function App() {
   return (
@@ -13,7 +14,13 @@ function App() {
       <Routes>
         <Route path="/" element={<Principal />}>
           <Route index element={<Home />} />
-          <Route path="instituicoes" element={<Instituicoes/>} />
+          <Route 
+          path="instituicoes" 
+          element={
+            <InstituicoesContextProvider>
+              <Instituicoes/>
+            </InstituicoesContextProvider>
+            } />
           <Route path="sobre" element={<Sobre />} />
         </Route>
       </Routes>

@@ -1,11 +1,14 @@
 import { MDBBtn, MDBIcon, MDBTable, MDBTableBody, MDBTableHead } from "mdb-react-ui-kit";
 import { useEffect, useState } from "react";
 import PaginationComponent from "./PaginationComponent";
-import PropTypes from "prop-types";
 import { toast } from "react-toastify";
+import useInstituicao from "../context/InstituicoesContext";
 
 
-const InstituicoesTable = ({instituicoes, setInstituicoes}) =>{
+const InstituicoesTable = () =>{
+    let {instituicoes, setInstituicoes,} = useInstituicao();
+    
+
     const [atualPage, setAtualPage] = useState(1);
     const itensPorPage = 15;
 
@@ -123,9 +126,5 @@ const InstituicoesTable = ({instituicoes, setInstituicoes}) =>{
 
 };
 
-InstituicoesTable.propTypes = {
-    instituicoes: PropTypes.array,
-    setInstituicoes: PropTypes.func,
-};
 
 export default InstituicoesTable;

@@ -5,11 +5,26 @@ import * as Yup from 'yup';
 const InstituicoesContext = createContext();
 
 export function InstituicoesContextProvider({ children }) {
-    const [instituicoes, setInstituicoes] = useState([]);
+
+      const [instituicoes, setInstituicoes] = useState([]);
       const [show, setShow] = useState(false);
-      const handleShow = () => setShow(!show);
-    
-    
+
+      const [editarInstituicao, setEditarInstituicao] = useState(null);
+
+      const handleEdit = (instituicao) => {
+        setEditarInstituicao(instituicao); 
+        setShow(!show);
+      };
+
+      const handleShow = (instituicao) => {
+        if (instituicao) {
+          setEditarInstituicao(instituicao);
+        } else {  
+          setEditarInstituicao(null);
+        }
+        setShow(!show); 
+      };
+      
       const schema = Yup.object().shape({
         NO_REGIAO: Yup.string().required("Campo obrigatório"),
         NO_UF: Yup.string().required("Campo obrigatório"),
@@ -51,6 +66,8 @@ export function InstituicoesContextProvider({ children }) {
         show,
         handleShow,
         setShow,
+        handleEdit,
+        editarInstituicao,
         }}
       >
         {children}

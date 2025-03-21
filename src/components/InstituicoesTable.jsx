@@ -6,7 +6,7 @@ import useInstituicao from "../context/InstituicoesContext";
 
 
 const InstituicoesTable = () =>{
-    let {instituicoes, setInstituicoes,} = useInstituicao();
+    let {instituicoes, setInstituicoes,handleEdit} = useInstituicao();
     
 
     const [atualPage, setAtualPage] = useState(1);
@@ -45,8 +45,6 @@ const InstituicoesTable = () =>{
         .then((response) => {
           if (response.ok) {
             setInstituicoes(instituicoes.filter((instituicao) => instituicao.id !== id));
-
-             
           }
 
           toast.success("Instituicao apagada com sucesso!",{
@@ -64,6 +62,7 @@ const InstituicoesTable = () =>{
 
     return (
         <>
+        
 
           <MDBTable hover>
             <MDBTableHead>
@@ -100,7 +99,7 @@ const InstituicoesTable = () =>{
                     <td>
 
                       {/*botoes */}
-                      <MDBBtn floating tag="a" className="mx-2 mb-2" >
+                      <MDBBtn floating tag="a" className="mx-2 mb-2" onClick={() => handleEdit(instituicao)} >
                         <MDBIcon fas icon="pen" />
                       </MDBBtn>
     

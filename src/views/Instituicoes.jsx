@@ -14,8 +14,12 @@ const Instituicoes = () => {
     schema,
     show,
     handleShow,
-    setShow
+    setShow,
+    editarInstituicao,
   } = useInstituicao();
+
+  
+  
 
  
   const handleSubmit = (values, actions) => {
@@ -47,8 +51,37 @@ const Instituicoes = () => {
     actions.setSubmitting(false);
   };
 
+  const handleUpdate = (values, actions) => {
+    fetch(`http://localhost:3000/instituicoes/${values.id}`, {
+      method: 'PUT',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values),
+    })
+      .then((response) => {
+        if (response.ok) {
+          toast.success('Instituição atualizada com sucesso!');
+          setInstituicoes(
+            instituicoes.map((inst) => (inst.id === values.id ? values : inst))
+          );
+          setShow(!show);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error('Erro ao atualizar a instituição!');
+      });
+  
+    actions.setSubmitting(false);
+  };
+  
+
   return (
     <>
+    
       <div>Instituições</div>
 
       <div>
@@ -58,7 +91,7 @@ const Instituicoes = () => {
           </Col>
           <Col>
             <MDBTooltip tag="span" wrapperClass="d-inline-block" title="Adicionar Propriedade">
-              <Button onClick={handleShow}>+</Button>
+              <Button onClick={() => handleShow(null)}>+</Button>
             </MDBTooltip>
           </Col>
         </Row>
@@ -73,11 +106,17 @@ const Instituicoes = () => {
           <Modal.Title id="example-modal-sizes-title-lg">Cadastrar</Modal.Title>
         </Modal.Header>
         <Formik
-         initialValues={{
-           instituicoesInitialValues
-         }} 
+         initialValues={ editarInstituicao || instituicoesInitialValues  }
          validationSchema={schema}
-          onSubmit={handleSubmit}>
+
+         onSubmit={(values, actions) => {
+          if (values.id) {
+            handleUpdate(values, actions);
+          } else {
+            handleSubmit(values, actions);
+          }
+        }}
+          >
           {({ values, errors, handleChange, handleSubmit }) => (
             <Form onSubmit={handleSubmit}>
               <Modal.Body>
@@ -88,7 +127,8 @@ const Instituicoes = () => {
                   name="NO_REGIAO" 
                   value={values.NO_REGIAO} 
                   onChange={handleChange} 
-                  isInvalid={!!errors.NO_REGIAO}/>
+                  isInvalid={!!errors.NO_REGIAO}//faz o campo ficar vermelho
+                  />
                   
                 </Form.Group>
 
@@ -196,7 +236,7 @@ const Instituicoes = () => {
                   Fechar
                 </Button>
                 <Button variant="primary" type="submit">
-                  Adicionar
+                {editarInstituicao ? "Salvar Alterações" : "Adicionar"}
                 </Button>
               </Modal.Footer>
             </Form>

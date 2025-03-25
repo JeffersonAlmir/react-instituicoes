@@ -6,7 +6,7 @@ import useInstituicao from "../context/InstituicoesContext";
 
 
 const InstituicoesTable = () =>{
-    let {instituicoes, setInstituicoes,handleEdit} = useInstituicao();
+    let {instituicoes, setInstituicoes,handleShowEdit} = useInstituicao();
     
 
     const [atualPage, setAtualPage] = useState(1);
@@ -99,7 +99,7 @@ const InstituicoesTable = () =>{
                     <td>
 
                       {/*botoes */}
-                      <MDBBtn floating tag="a" className="mx-2 mb-2" onClick={() => handleEdit(instituicao)} >
+                      <MDBBtn floating tag="a" className="mx-2 mb-2" onClick={() => handleShowEdit(instituicao)} >
                         <MDBIcon fas icon="pen" />
                       </MDBBtn>
     

@@ -7,22 +7,20 @@ const InstituicoesContext = createContext();
 export function InstituicoesContextProvider({ children }) {
 
       const [instituicoes, setInstituicoes] = useState([]);
-      const [show, setShow] = useState(false);
 
+      const [showAdd, setShowAdd] = useState(false);
+      const [showEdit, setShowEdit] = useState(false);
       const [editarInstituicao, setEditarInstituicao] = useState(null);
 
-      const handleEdit = (instituicao) => {
+      const handleShowEdit = (instituicao) => {
         setEditarInstituicao(instituicao); 
-        setShow(!show);
+        setShowEdit(!showEdit);
       };
 
-      const handleShow = (instituicao) => {
-        if (instituicao) {
-          setEditarInstituicao(instituicao);
-        } else {  
-          setEditarInstituicao(null);
-        }
-        setShow(!show); 
+      const handleShowAdd = (instituicao) => {
+        setEditarInstituicao(instituicao);
+        console.log("Chamando handleShowAdd", showAdd); 
+        setShowAdd(!showAdd); 
       };
       
       const schema = Yup.object().shape({
@@ -63,11 +61,14 @@ export function InstituicoesContextProvider({ children }) {
         setInstituicoes,
         instituicoesInitialValues,
         schema,
-        show,
-        handleShow,
-        setShow,
-        handleEdit,
+        handleShowAdd,
+        handleShowEdit,
         editarInstituicao,
+        showAdd, 
+        setShowAdd,
+        setShowEdit,
+        showEdit,
+
         }}
       >
         {children}
